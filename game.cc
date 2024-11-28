@@ -29,9 +29,9 @@ void Game::start() {
                 board2->placeCurBlockOnGrid();
             }
             std::cout << "Player 1" << std::endl;
-            board1->display();
+            board1->notifyObservers();
             std::cout << "Player 2" << std::endl;
-            board2->display();
+            board2->notifyObservers();
             std::string command;
             std::cin >> command;
             executeCommand(command);
@@ -94,4 +94,12 @@ void Game::executeCommand(const std::string& command) {
     } else {
         std::cout << "Invalid command!" << std::endl;
     }
+}
+
+Board *Game::getBoard1() const {
+    return board1.get();
+}
+
+Board *Game::getBoard2() const {
+    return board2.get();
 }

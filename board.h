@@ -32,6 +32,7 @@ public:
     void display() const;
     bool isGameOver() const;
     void notifyObservers();
+    void attach(Observer *ob);
 
     const std::string& getName() const;
     int getScore() const;
@@ -40,6 +41,7 @@ public:
     void levelUp();
     void levelDown();
     void reset();
+    std::vector<std::vector<char>> getGrid();
 
 private:
     int rows;
@@ -51,7 +53,7 @@ private:
     std::string name;
     int score;
     int playerLevel;
-    std::unique_ptr<ConcreteTextObserver> cto;
+    std::vector<Observer *> obs;
 };
 
 #endif

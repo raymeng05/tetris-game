@@ -19,6 +19,8 @@ public:
     void displayStatus() const;
     bool isGameOver() const;
     void executeCommand(const std::string& command);
+    Board* getBoard1() const;
+    Board* getBoard2() const;
 };
 
 #endif

@@ -6,8 +6,9 @@
 class Board;
 
 class ConcreteTextObserver: public Observer {
-    std::unique_ptr<Board> b;
+    Board *b; // The game has a unique pointer that will deallocate the board
     public:
+        ConcreteTextObserver(Board *b);
         void notify() override;
 };
 

@@ -2,7 +2,7 @@
 #include "level1.h"
 
 Board::Board(int rows, int cols, const std::string& name, int level)
-    : rows(rows), cols(cols), grid(rows, std::vector<char>(cols, ' ')), name(name), score(0), playerLevel(level), level(std::make_unique<Level1>(Level1{level})), cto(std::make_unique<ConcreteTextObserver>()) {}
+    : rows(rows), cols(cols), grid(rows, std::vector<char>(cols, ' ')), name(name), score(0), playerLevel(level), level(std::make_unique<Level1>(Level1{level})) {}
 
 
 void Board::placeCurBlockOnGrid() {
@@ -312,6 +312,15 @@ void Board::reset() {
 }
 
 void Board::notifyObservers() {
-    cto->notify();
-    //cgo->notify();
+    for (auto ob: obs) {
+        ob->notify();
+    }
+}
+
+void Board::attach(Observer *ob) {
+    obs.emplace_back(ob);
+}
+
+std::vector<std::vector<char>> Board::getGrid() {
+    return grid;
 }
