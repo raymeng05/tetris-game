@@ -4,24 +4,23 @@
 #include "concreteTextObserver.h"
 #include "concreteGraphicsObserver.h"
 #include <iostream>
+using namespace std;
 
 int main() {
-    Game game("Player1", "Player2");
+    int p1Level;
+    int p2Level;
+    cout << "Enter the player levels: ";
+    cin >> p1Level >> p2Level;
+    Game game("Player1", "Player2", p1Level, p2Level);
     CommandInterpreter interpreter(game);
-    Xwindow xw(500, 500);
+    //Xwindow xw(500, 500);
     ConcreteTextObserver cto1{game.getBoard1()};
-    ConcreteGraphicsObserver cgo1{game.getBoard1(), &xw};
+    //ConcreteGraphicsObserver cgo1{game.getBoard1(), &xw};
 
     ConcreteTextObserver cto2{game.getBoard2()};
-    ConcreteGraphicsObserver cgo2{game.getBoard2(), &xw};
+    //ConcreteGraphicsObserver cgo2{game.getBoard2(), &xw};
 
     game.start();
-
-    /*while (!game.isGameOver()) {
-        std::string command;
-        std::cin >> command;
-        interpreter.interpret(command);
-    }*/
 
     return 0;
 }

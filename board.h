@@ -40,6 +40,7 @@ public:
     void increaseScore(int points);
     void levelUp();
     void levelDown();
+    void changeLevel();
     void reset();
     std::vector<std::vector<char>> getGrid();
 

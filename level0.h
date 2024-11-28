@@ -11,11 +11,9 @@ struct Level0 : public Level {
     private:
         int curLevel;
         string f1;
-        string f2;
-        ifstream readf1;
-        ifstream readf2;
+        ifstream readf1; 
     public:
-        Level0(int curLevel, string f1, string f2);
+        Level0(int curLevel, string f1);
         std::unique_ptr<Block> createBlock();
 };
 

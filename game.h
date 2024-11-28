@@ -10,10 +10,12 @@ class Game {
 private:
     std::unique_ptr<Board> board1;
     std::unique_ptr<Board> board2;
+    int p1Level;
+    int p2Level;
     bool isPlayer1Turn;
 
 public:
-    Game(const std::string& player1Name, const std::string& player2Name);
+    Game(const std::string& player1Name, const std::string& player2Name, int p1Level, int p2Level);
     void start();
     void switchTurn();
     void displayStatus() const;

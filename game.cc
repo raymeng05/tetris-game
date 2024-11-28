@@ -2,18 +2,16 @@
 #include "concreteTextObserver.h"
 #include <iostream>
 
-Game::Game(const std::string& player1Name, const std::string& player2Name)
-    : board1(std::make_unique<Board>(Board{18, 11, player1Name, 1})), board2(std::make_unique<Board>(Board{18, 11, player2Name, 1})), isPlayer1Turn(true) {}
+Game::Game(const std::string& player1Name, const std::string& player2Name, int p1Level, int p2Level)
+    : board1(std::make_unique<Board>(Board{18, 11, player1Name, p1Level})), board2(std::make_unique<Board>(Board{18, 11, player2Name, p2Level})), isPlayer1Turn(true) {}
 
-void Game::start() {
+/*void Game::start() {
     board1->setNextBlock();
     board2->setNextBlock();
 
     board1->setCurrentBlock();
     board2->setCurrentBlock();
 
-    //board1->placeCurBlockOnGrid();
-    //board2->placeCurBlockOnGrid();
     while (true) { // CHANGE WHILE TRUE
         //displayStatus();
         if (isPlayer1Turn) {
@@ -49,6 +47,47 @@ void Game::start() {
         } else {
             board1->setNextBlock();
             board1->setCurrentBlock();
+        }
+        switchTurn();
+    }
+    std::cout << "Game Over!" << std::endl;
+}*/
+
+void Game::start() {
+    /*board1->setNextBlock();
+    board2->setNextBlock();
+
+    board1->setCurrentBlock();
+    board2->setCurrentBlock();*/
+    board1->setNextBlock();
+    board2->setNextBlock();
+    while (true) { // CHANGE WHILE TRUE
+        //displayStatus();
+        if (isPlayer1Turn) {
+            board1->setCurrentBlock();
+            board1->setNextBlock();
+        } else {
+            board2->setCurrentBlock();
+            board2->setNextBlock();
+        }
+
+        while (true) {
+            if (isPlayer1Turn) {
+                board1->placeCurBlockOnGrid();
+            } else {
+                board2->placeCurBlockOnGrid();
+            }
+            std::cout << "Player 1" << std::endl;
+            board1->notifyObservers();
+            std::cout << "Player 2" << std::endl;
+            board2->notifyObservers();
+            std::string command;
+            std::cin >> command;
+            executeCommand(command);
+
+            if (command == "drop") {
+                break;
+            }
         }
         switchTurn();
     }
