@@ -122,7 +122,6 @@ void Board::placeBlockOnGrid(const Block& block) {
             } else {
                 std::cout << "Out of bounds: (" << newRow << ", " << newCol << ")\n";
             }
-            
         }
     }
 }
@@ -215,7 +214,7 @@ void Board::dropBlock() {
         // The block will keep moving down until it hits the bottom or another block
     }
     placeBlockOnGrid(*currentBlock);
-    //clearFullRows();
+    clearFullRows();
     //currentBlock = std::move(nextBlock);
     //if (!isValidPosition(*currentBlock)) {
       //  currentBlock.reset();
@@ -223,17 +222,20 @@ void Board::dropBlock() {
 }
 
 void Board::clearFullRows() {
+    cout << "clear" << endl;
     for (int i = 0; i < rows; ++i) {
         bool fullRow = true;
         for (int j = 0; j < cols; ++j) {
             if (grid[i][j] == ' ') {
                 fullRow = false;
+                cout << "breaking from clearing" << endl;
                 break;
             }
         }
         if (fullRow) {
+            cout << "actualy clearing row" << endl;
             grid.erase(grid.begin() + i);
-            grid.insert(grid.begin(), std::vector<char>(cols, 0));
+            grid.insert(grid.begin(), std::vector<char>(cols, ' '));
             increaseScore(100); // How much to increase score by?
         }
     }
@@ -246,14 +248,14 @@ void Board::generateNextBlock() {
 void Board::display() const {
     std::cout << "Level:     " << playerLevel << std::endl;
     std::cout << "Score:     " << playerLevel << std::endl;
-    std::cout << "----------" << std::endl;
+    std::cout << "-----------" << std::endl;
     for (const auto& row : grid) {
         for (char cell : row) {
             std::cout << cell;
         }
         std::cout << std::endl;
     }
-    std::cout << "----------" << std::endl;
+    std::cout << "-----------" << std::endl;
     std::cout << "Next: " << std::endl;
     if (nextBlock == nullptr) {
         std::cout<<std::endl;
