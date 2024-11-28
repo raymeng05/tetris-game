@@ -3,7 +3,7 @@ using namespace std;
 
 Level1::Level1(int curLevel): Level{curLevel}, curLevel{curLevel} {
     rng.seed(static_cast<unsigned int>(std::time(0)));
-    std::discrete_distribution<int>::param_type p({1, 1, 2, 2, 2, 2, 2, 2});
+    std::discrete_distribution<int>::param_type p({1, 1, 2, 2, 2, 2, 2});
     dist.param(p);
 }
 

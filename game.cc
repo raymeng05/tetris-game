@@ -12,8 +12,8 @@ void Game::start() {
     board1->setCurrentBlock();
     board2->setCurrentBlock();
 
-    board1->placeCurBlockOnGrid();
-    board2->placeCurBlockOnGrid();
+    //board1->placeCurBlockOnGrid();
+    //board2->placeCurBlockOnGrid();
     while (true) { // CHANGE WHILE TRUE
         //displayStatus();
         if (isPlayer1Turn) {
@@ -23,6 +23,11 @@ void Game::start() {
         }
 
         while (true) {
+            if (isPlayer1Turn) {
+                board1->placeCurBlockOnGrid();
+            } else {
+                board2->placeCurBlockOnGrid();
+            }
             std::cout << "Player 1" << std::endl;
             board1->display();
             std::cout << "Player 2" << std::endl;

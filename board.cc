@@ -37,7 +37,7 @@ bool Board::isValidPosition(const Block& block) {
     for (int i = 0; i < shape.size(); ++i) {
         
         for (int j = 0; j < shape[i].size(); ++j) {
-            cout << "hello" << endl;
+            //cout << "hello" << endl;
             if (shape[i][j] != ' ') {
                 int newRow = row + i;
                 int newCol = col + j;
@@ -46,11 +46,15 @@ bool Board::isValidPosition(const Block& block) {
                     isValid = false;
                     break;
                 }
+                if (grid[newRow][newCol] != ' ') {
+                    isValid = false;
+                    break;
+                }
             }
         }
         if (!isValid) return false;
     }
-    cout << "reached end" << endl;
+    //cout << "reached end" << endl;
     for (int i = 0; i < shape.size(); ++i) {
         for (int j = 0; j < shape[i].size(); ++j) {
             if (shape[i][j] != ' ') {
@@ -58,11 +62,11 @@ bool Board::isValidPosition(const Block& block) {
             }
         }
     }
-    std::cout << "after temp remove: " << std::endl;
-    display();
+    //std::cout << "after temp remove: " << std::endl;
+    //display();
 
     // Check if the new position is valid
-    isValid = true;
+    /*isValid = true;
     for (int i = 0; i < shape.size(); ++i) {
         for (int j = 0; j < shape[i].size(); ++j) {
             if (shape[i][j] != ' ') {
@@ -80,17 +84,17 @@ bool Board::isValidPosition(const Block& block) {
                 }
             }
         }
-        if (!isValid) break;
-    }
+        if (!isValid) return false;
+    }*/
 
     // Restore the block to the grid
-    for (int i = 0; i < shape.size(); ++i) {
+    /*for (int i = 0; i < shape.size(); ++i) {
         for (int j = 0; j < shape[i].size(); ++j) {
             if (shape[i][j] != ' ') {
                 grid[row + i][col + j] = shape[i][j];
             }
         }
-    }
+    }*/
 
     return isValid;
 }
@@ -111,7 +115,7 @@ void Board::placeBlockOnGrid(const Block& block) {
             
             int newRow = row + i;
             int newCol = col + j;
-            if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) {
+            if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols && grid[newRow][newCol] == ' ') {
                 std::cout << "Placing " << shape[i][j] << " at (" << newRow << ", " << newCol << ")\n";
                 grid[newRow][newCol] = shape[i][j]; // Place the actual character
                 std::cout << newRow << ", " << newCol << std::endl;
@@ -150,16 +154,15 @@ bool Board::moveBlockRight() {
 bool Board::moveBlockDown() {
     clearBlockFromGrid(*currentBlock); // Clear the block's current position
     currentBlock->moveDown();
-    std::cout << "Trying to move down to row: " << currentBlock->getRow() << ", col: " << currentBlock->getCol() << std::endl;
+    //std::cout << "Trying to move down to row: " << currentBlock->getRow() << ", col: " << currentBlock->getCol() << std::endl;
     if (!isValidPosition(*currentBlock)) {
         currentBlock->moveUp();
         placeBlockOnGrid(*currentBlock); // Restore the block's position if the move is invalid
-        clearFullRows();
-        //currentBlock = std::move(nextBlock);
-        if (!isValidPosition(*currentBlock)) {
+        //clearFullRows();
+        /*if (!isValidPosition(*currentBlock)) {
             std::cout << "REACHED INVALID" << std::endl;
             currentBlock.reset();
-        }
+        }*/
         return false;
     }
     placeBlockOnGrid(*currentBlock); // Place the block in its new position
@@ -189,7 +192,7 @@ void Board::clearBlockFromGrid(const Block& block) {
     int row = block.getRow();
     int col = block.getCol();
 
-    std::cout << "Clearing block at row: " << row << ", col: " << col << std::endl;
+    //std::cout << "Clearing block at row: " << row << ", col: " << col << std::endl;
 
     for (int i = 0; i < shape.size(); ++i) {
         for (int j = 0; j < shape[i].size(); ++j) {
@@ -197,10 +200,10 @@ void Board::clearBlockFromGrid(const Block& block) {
                 int newRow = row + i;
                 int newCol = col + j;
                 if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) {
-                    std::cout << "Clearing (" << newRow << ", " << newCol << ")\n";
+                    //std::cout << "Clearing (" << newRow << ", " << newCol << ")\n";
                     grid[newRow][newCol] = ' '; // Clear the block's character
                 } else {
-                    std::cout << "Out of bounds: (" << newRow << ", " << newCol << ")\n";
+                   // std::cout << "Out of bounds: (" << newRow << ", " << newCol << ")\n";
                 }
             }
         }
