@@ -13,12 +13,12 @@ int main() {
     cin >> p1Level >> p2Level;
     Game game("Player1", "Player2", p1Level, p2Level);
     CommandInterpreter interpreter(game);
-    //Xwindow xw(500, 500);
+    Xwindow xw(1000, 600);
     ConcreteTextObserver cto1{game.getBoard1()};
-    //ConcreteGraphicsObserver cgo1{game.getBoard1(), &xw};
+    ConcreteGraphicsObserver cgo1{game.getBoard1(), &xw, 0};
 
     ConcreteTextObserver cto2{game.getBoard2()};
-    //ConcreteGraphicsObserver cgo2{game.getBoard2(), &xw};
+    ConcreteGraphicsObserver cgo2{game.getBoard2(), &xw, 500};
 
     game.start();
 

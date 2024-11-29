@@ -17,13 +17,12 @@ Xwindow::Xwindow(int width, int height) : width{width}, height{height} {
     }
     s = DefaultScreen(d);
     w = XCreateSimpleWindow(d, RootWindow(d, s), 10, 10, width, height, 1,
-                            BlackPixel(d, s), WhitePixel(d, s));
+                            BlackPixel(d, s), BlackPixel(d, s));
     XSelectInput(d, w, ExposureMask | KeyPressMask);
     XMapRaised(d, w);
 
-    Pixmap pix = XCreatePixmap(d,w,width,
-            height,DefaultDepth(d,DefaultScreen(d)));
-    gc = XCreateGC(d, pix, 0,(XGCValues *)0);
+    pm = XCreatePixmap(d, w, width, height, DefaultDepth(d, s));
+    gc = XCreateGC(d, pm, 0,(XGCValues *)0);
 
     XFlush(d);
     XFlush(d);
@@ -49,6 +48,9 @@ Xwindow::Xwindow(int width, int height) : width{width}, height{height} {
 
     XSynchronize(d,True);
 
+    XSetWindowBackground(d, w, BlackPixel(d, s));
+    XClearWindow(d, w);
+
     usleep(1000);
 }
 
@@ -60,12 +62,15 @@ void Xwindow::fillBlock(int x, int y, char blockType) {
         case 'L': colorIndex = Red; break;
         case 'O': colorIndex = Green; break;
         case 'S': colorIndex = Blue; break;
-        case 'Z': colorIndex = White; break;
-        case 'T': colorIndex = Magenta; break;
+        case 'Z': colorIndex = Magenta; break;
+        case 'T': colorIndex = White; break;
         default: colorIndex = Black; break; // Default to black if unknown
     }
     XSetForeground(d, gc, colours[colorIndex]);
-    XFillRectangle(d, w, gc, x, y, 25, 25);
+    int blockWidth = 20;
+    int blockHeight = 20;
+    int gap = 5;
+    XFillRectangle(d, pm, gc, x + gap, y + gap, blockWidth, blockHeight);
 }
 
 int Xwindow::getHeight() const {
@@ -76,7 +81,50 @@ int Xwindow::getWidth() const {
     return width;
 }
 
+void Xwindow::flush() {
+    XCopyArea(d, pm, w, gc, 0, 0, width, height, 0, 0);
+    XFlush(d);
+}
+
+void Xwindow::drawLine(int x1, int y1, int x2, int y2) {
+    XSetForeground(d, gc, colours[Gray]);
+    XDrawLine(d, pm, gc, x1, y1, x2, y2);
+}
+
+Display* Xwindow::getDisplay() const {
+    return d;
+}
+
+Window Xwindow::getWindow() const {
+    return w;
+}
+
+int Xwindow::getScreen() const {
+    return s;
+}
+
+GC Xwindow::getGC() const {
+    return gc;
+}
+
+Pixmap Xwindow::getPixmap() const {
+    return pm;
+}
+
+unsigned long Xwindow::getColour(int index) const {
+    if (index >= 0 && index < 8) {
+        return colours[index];
+    }
+    return 0;
+}
+
+void Xwindow::drawText(int x, int y, const string &text) {
+    XSetForeground(d, gc, colours[Gray]);
+    XDrawString(d, pm, gc, x, y, text.c_str(), text.length());
+}
+
 Xwindow::~Xwindow() {
+    XFreePixmap(d, pm);
     XFreeGC(d, gc);
     XDestroyWindow(d, w);
     XCloseDisplay(d);

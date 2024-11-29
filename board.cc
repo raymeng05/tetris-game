@@ -364,3 +364,4 @@ void Board::attach(Observer *ob) {
 std::vector<std::vector<char>> Board::getGrid() {
     return grid;
 }
+

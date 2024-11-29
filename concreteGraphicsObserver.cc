@@ -1,24 +1,25 @@
 #include "concreteGraphicsObserver.h"
 
-ConcreteGraphicsObserver::ConcreteGraphicsObserver(Board *board, Xwindow *window): b(board), Window(window) {
+ConcreteGraphicsObserver::ConcreteGraphicsObserver(Board *board, Xwindow *window, int offsetX): b(board), Window(window), offsetX{offsetX} {
     board->attach(this);
 }
 
 void ConcreteGraphicsObserver::notify() {
 
-    // XClearWindow(Window->d, Window->w);
-
-    int blockWidth = Window->getWidth() / 11;
+    int blockWidth = Window->getWidth() / 22;
     int blockHeight = Window->getHeight() / 18;
     std::vector<std::vector<char>> gameBoard = b->getGrid();
 
     for (int row = 0; row < 18; ++row) {
         for (int col = 0; col < 11; ++col) {
             char blockType = gameBoard[row][col];
-            Window->fillBlock(col * blockWidth, row * blockHeight, blockType);
+            Window->fillBlock(offsetX + col * blockWidth, row * blockHeight, blockType);
         }
     }
-    // XFlush(Window->d);
+    int lineX = Window->getWidth() / 2 - 12;
+    Window->drawLine(lineX, 0, lineX, Window->getHeight());
+
+    Window->flush();
 }
 
 

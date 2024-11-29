@@ -9,6 +9,7 @@ class Xwindow {
   Window w;
   int s, width, height;
   GC gc;
+  Pixmap pm;
   unsigned long colours[8];
 
  public:
@@ -19,11 +20,19 @@ class Xwindow {
 
   int getWidth() const;
   int getHeight() const;
+  Display* getDisplay() const;
+  Window getWindow() const;
+  int getScreen() const;
+  GC getGC() const;
+  Pixmap getPixmap() const;
+  unsigned long getColour(int index) const;
 
   // Draws a Block
   void fillBlock(int x, int y, char blockType);
 
-;
+  void flush();
+  void drawLine(int x1, int y1, int x2, int y2);
+  void drawText(int x, int y, const std::string &text);
 
 };
 
