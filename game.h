@@ -42,6 +42,7 @@ public:
     int getScore2();
     std::vector<std::vector<char>> getGrid1();
     std::vector<std::vector<char>> getGrid2();
+    
 };
 
 #endif

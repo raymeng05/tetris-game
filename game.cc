@@ -227,3 +227,5 @@ std::vector<std::vector<char>> Game::getGrid1() {
 std::vector<std::vector<char>> Game::getGrid2() {
     return board2->getGrid();
 }
+
+
