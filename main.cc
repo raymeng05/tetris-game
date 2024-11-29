@@ -40,11 +40,11 @@ int main(int argc, char *argv[]) {
     unique_ptr<Xwindow> xw;
     unique_ptr <ConcreteGraphicsObserver> cgo;
     if (!onlyText) {
-        xw = make_unique<Xwindow>(550, 500);
+        xw = make_unique<Xwindow>(550, 625);
         cgo = make_unique<ConcreteGraphicsObserver>(&game, xw.get());
     }
+
     CommandInterpreter interpreter(game);
-    Xwindow xw(550, 625);
     ConcreteTextObserver cto{&game};
 
     game.start();
