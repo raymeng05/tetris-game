@@ -1,14 +1,14 @@
 #ifndef CONCRETETEXTOBSERVER_H
 #define CONCRETETEXTOBSERVER_H
 #include "observer.h"
-#include "board.h"
+#include "game.h"
 
-class Board;
+class Game;
 
 class ConcreteTextObserver: public Observer {
-    Board *b; // The game has a unique pointer that will deallocate the board
+    Game *b; // The game has a unique pointer that will deallocate the board
     public:
-        ConcreteTextObserver(Board *b);
+        ConcreteTextObserver(Game *b);
         void notify() override;
 };
 

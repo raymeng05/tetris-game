@@ -10,7 +10,7 @@ private:
 
 public:
     CommandInterpreter(Game& game);
-    void interpret(const std::string& command);
+    void interpret(std::string& command);
 };
 
 #endif

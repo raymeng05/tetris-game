@@ -14,8 +14,9 @@ class Level;
 
 class Board {
 public:
-    Board(int rows, int cols, const std::string& name, int level = 0);
-    void setCurrentBlock();
+    Board(int rows, int cols, const std::string& name, int level, std::string f1);
+    void switchCurrentBlock();
+    void setCurBlock(char bl);
     void setNextBlock();
     void placeCurBlockOnGrid();
     bool isValidPosition(const Block& block);
@@ -29,11 +30,11 @@ public:
     void dropBlock();
     void clearFullRows();
     void generateNextBlock();
-    void display() const;
+    //void display() const;
     bool isGameOver() const;
-    void notifyObservers();
-    void attach(Observer *ob);
 
+    std::unique_ptr<Block> getCurBlock();
+    std::unique_ptr<Block> getNextBlock();
     const std::string& getName() const;
     int getScore() const;
     int getLevel() const;
@@ -54,7 +55,7 @@ private:
     std::string name;
     int score;
     int playerLevel;
-    std::vector<Observer *> obs;
+    std::string f1;
 };
 
 #endif

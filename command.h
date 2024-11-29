@@ -8,10 +8,13 @@ struct Command {
     private:
         string comm;
         int multiplier;
-        vector<string> commands = {"left", "right", "down", "clockwise", "counterclockwise", "drop", "levelup", "leveldown", "norandom ", "random", "sequence", "I", "J", "L", "O", "S", "Z", "T", "restart"};
+        vector<string> commands = {"left", "right", "down", "clockwise", "counterclockwise", "drop", "levelup", "leveldown", "norandom", "random", "sequence", "I", "J", "L", "O", "S", "Z", "T", "restart"};
     public:
         Command(string givenInput);
         void sepCommand(string s);
         void fixCommand();
+        void setCommand(string s);
+        string getCommand();
+        int getMultiplier();
 };
 #endif

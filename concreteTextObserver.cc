@@ -1,6 +1,6 @@
 #include "concreteTextObserver.h"
 
-ConcreteTextObserver::ConcreteTextObserver(Board *b): b{b} {
+ConcreteTextObserver::ConcreteTextObserver(Game *b): b{b} {
     b->attach(this);
 }
 

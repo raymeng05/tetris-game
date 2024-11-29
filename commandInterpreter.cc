@@ -3,6 +3,6 @@
 
 CommandInterpreter::CommandInterpreter(Game& game) : game(game) {}
 
-void CommandInterpreter::interpret(const std::string& command) {
+void CommandInterpreter::interpret(std::string& command) {
     game.executeCommand(command);
 }

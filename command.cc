@@ -2,10 +2,7 @@
 #include <iostream>
 using namespace std;
 
-Command::Command(string givenInput): comm{givenInput}, multiplier{1} {
-    sepCommand(givenInput);
-    fixCommand();
-}
+Command::Command(string givenInput): comm{givenInput}, multiplier{1} {}
 
 void Command::sepCommand(string s) {
     int multi = 1;
@@ -36,6 +33,19 @@ void Command::fixCommand() {
     } else {
         cout << "Command not found!" << endl;
     }
+}
+
+void Command::setCommand(string s) {
+    this->comm = s;
+    sepCommand(s);
+    fixCommand();
+}
+
+string Command::getCommand() {
+    return this->comm;
+}
+int Command::getMultiplier() {
+    return this->multiplier;
 }
 
 

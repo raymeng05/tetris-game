@@ -5,13 +5,10 @@
 #include "level3.h"
 #include "level4.h"
 
-Board::Board(int rows, int cols, const std::string& name, int level)
-    : rows(rows), cols(cols), grid(rows, std::vector<char>(cols, ' ')), name(name), score(0), playerLevel(level) {
+Board::Board(int rows, int cols, const std::string& name, int level, std::string f1)
+    : rows(rows), cols(cols), grid(rows, std::vector<char>(cols, ' ')), name(name), score(0), playerLevel(level), f1{f1} {
         if (playerLevel == 0) {
-            string s1;
-            cout << "Enter the file name: ";
-            cin >> s1;
-            this->level = std::make_unique<Level0>(Level0{level, s1});
+            this->level = std::make_unique<Level0>(Level0{level, f1});
         } else if (playerLevel == 1) {
             this->level = std::make_unique<Level1>(Level1{level});
         } else if (playerLevel == 2) {
@@ -36,8 +33,34 @@ void Board::placeCurBlockOnGrid() {
     }
 }
 
-void Board::setCurrentBlock() {
+void Board::switchCurrentBlock() {
     currentBlock = std::move(nextBlock);
+}
+
+void Board::setCurBlock(char bl) {
+    switch(bl) {
+        case 'S': 
+            this->currentBlock = std::make_unique<SBlock>();
+            break;
+        case 'Z': 
+            this->currentBlock = std::make_unique<ZBlock>();
+            break;
+        case 'T': 
+            this->currentBlock = std::make_unique<TBlock>();
+            break;
+        case 'O': 
+            this->currentBlock = std::make_unique<OBlock>();
+            break;
+        case 'L': 
+            this->currentBlock = std::make_unique<LBlock>();
+            break;
+        case 'I': 
+            this->currentBlock = std::make_unique<IBlock>();
+            break;
+        case 'J': 
+            this->currentBlock = std::make_unique<JBlock>();
+            break;
+    }
 }
 
 void Board::setNextBlock() {
@@ -205,6 +228,14 @@ void Board::rotateBlockCCW() {
     placeBlockOnGrid(*currentBlock); // Place the block in its new position
 }
 
+std::unique_ptr<Block> Board::getCurBlock() {
+    return std::make_unique<Block>(*currentBlock);
+}
+
+std::unique_ptr<Block> Board::getNextBlock() {
+    return std::make_unique<Block>(*nextBlock);
+}
+
 void Board::clearBlockFromGrid(const Block& block) {
     const auto& shape = block.getShape();
     int row = block.getRow();
@@ -264,7 +295,7 @@ void Board::generateNextBlock() {
     nextBlock = level->createBlock();
 }
 
-void Board::display() const {
+/*void Board::display() const {
     std::cout << "Level:     " << playerLevel << std::endl;
     std::cout << "Score:     " << playerLevel << std::endl;
     std::cout << "-----------" << std::endl;
@@ -290,7 +321,7 @@ void Board::display() const {
         cout << endl;
     }
     cout << endl;
-}
+}*/
 
 bool Board::isGameOver() const {
     return !currentBlock;
@@ -328,10 +359,7 @@ void Board::levelDown() {
 
 void Board::changeLevel() {
     if (playerLevel == 0) {
-            string s1;
-            cout << "Enter the file name: ";
-            cin >> s1;
-            this->level = std::make_unique<Level0>(Level0{playerLevel, s1});
+            this->level = std::make_unique<Level0>(Level0{playerLevel, f1});
         } else if (playerLevel == 1) {
             this->level = std::make_unique<Level1>(Level1{playerLevel});
         } else if (playerLevel == 2) {
@@ -349,16 +377,6 @@ void Board::reset() {
     grid = std::vector<std::vector<char>>(rows, std::vector<char>(cols, 0));
     currentBlock.reset();
     nextBlock.reset();
-}
-
-void Board::notifyObservers() {
-    for (auto ob: obs) {
-        ob->notify();
-    }
-}
-
-void Board::attach(Observer *ob) {
-    obs.emplace_back(ob);
 }
 
 std::vector<std::vector<char>> Board::getGrid() {

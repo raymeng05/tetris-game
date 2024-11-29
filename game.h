@@ -2,9 +2,15 @@
 #define GAME_H
 
 #include <memory>
+#include <fstream>
+#include <vector>
 #include "board.h"
+#include "command.h"
+#include "concreteTextObserver.h"
+
 
 class Board;
+class ConcreteTextObserver;
 
 class Game {
 private:
@@ -13,16 +19,21 @@ private:
     int p1Level;
     int p2Level;
     bool isPlayer1Turn;
+    Command comm;
+    std::vector<Observer *> obs;
 
 public:
-    Game(const std::string& player1Name, const std::string& player2Name, int p1Level, int p2Level);
+    Game(const std::string& player1Name, const std::string& player2Name, int pLevel, string f1, string f2, bool onlyText);
     void start();
     void switchTurn();
     void displayStatus() const;
     bool isGameOver() const;
-    void executeCommand(const std::string& command);
+    void executeCommand(std::string& command);
+    void display();
     Board* getBoard1() const;
     Board* getBoard2() const;
+    void notifyObservers();
+    void attach(Observer *ob);
 };
 
 #endif
