@@ -34,6 +34,14 @@ public:
     Board* getBoard2() const;
     void notifyObservers();
     void attach(Observer *ob);
+    string getName1();
+    string getName2();
+    int getLevel1();
+    int getLevel2();
+    int getScore1();
+    int getScore2();
+    std::vector<std::vector<char>> getGrid1();
+    std::vector<std::vector<char>> getGrid2();
 };
 
 #endif

@@ -10,7 +10,6 @@ class Xwindow;
 class ConcreteGraphicsObserver: public Observer {
     Game *b; // The game has a unique pointer that will deallocate the board
     std::unique_ptr<Xwindow> Window;
-    int offsetX;
     public:
         ConcreteGraphicsObserver(Game *b, Xwindow *window);
         void notify() override;

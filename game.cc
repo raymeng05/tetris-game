@@ -195,3 +195,35 @@ void Game::notifyObservers() {
 void Game::attach(Observer *ob) {
     obs.emplace_back(ob);
 }
+
+std::string Game::getName1() {
+    return board1->getName();
+}
+
+std::string Game::getName2() {
+    return board2->getName();
+}
+
+int Game::getLevel1() {
+    return board1->getLevel();
+}
+
+int Game::getLevel2() {
+    return board2->getLevel();
+}
+
+int Game::getScore1() {
+    return board1->getScore();
+}
+
+int Game::getScore2() {
+    return board2->getScore();
+}
+
+std::vector<std::vector<char>> Game::getGrid1() {
+    return board1->getGrid();
+}
+
+std::vector<std::vector<char>> Game::getGrid2() {
+    return board2->getGrid();
+}

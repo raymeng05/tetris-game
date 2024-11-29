@@ -37,9 +37,9 @@ int main(int argc, char *argv[]) {
     Game game("Player1", "Player2", level, f1, f2, onlyText);
 
     CommandInterpreter interpreter(game);
-    //Xwindow xw(500, 500);
+    Xwindow xw(550, 500);
     ConcreteTextObserver cto{&game};
-    //ConcreteGraphicsObserver cgo{game.getBoard1(), &xw};
+    ConcreteGraphicsObserver cgo{&game, &xw};
 
     game.start();
 
