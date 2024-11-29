@@ -72,14 +72,13 @@ bool Board::isValidPosition(const Block& block) {
     const auto& shape = block.getShape();
     int row = block.getRow();
     int col = block.getCol();
-    cout << "check position row: " << row << " col: " << col << endl;
+    //cout << "check position row: " << row << " col: " << col << endl;
     // Temporarily remove the block from the grid
     bool isValid = true;
 
     for (int i = 0; i < shape.size(); ++i) {
         
         for (int j = 0; j < shape[i].size(); ++j) {
-            //cout << "hello" << endl;
             if (shape[i][j] != ' ') {
                 int newRow = row + i;
                 int newCol = col + j;
@@ -104,45 +103,10 @@ bool Board::isValidPosition(const Block& block) {
             }
         }
     }
-    //std::cout << "after temp remove: " << std::endl;
-    //display();
-
-    // Check if the new position is valid
-    /*isValid = true;
-    for (int i = 0; i < shape.size(); ++i) {
-        for (int j = 0; j < shape[i].size(); ++j) {
-            if (shape[i][j] != ' ') {
-                int newRow = row + i;
-                int newCol = col + j;
-                // Check if the new position is out of bounds
-                if (newRow < 0 || newRow >= rows || newCol < 0 || newCol >= cols) {
-                    isValid = false;
-                    break;
-                }
-                // Check if the new position is already occupied
-                if (grid[newRow][newCol] != ' ') {
-                    isValid = false;
-                    break;
-                }
-            }
-        }
-        if (!isValid) return false;
-    }*/
-
-    // Restore the block to the grid
-    /*for (int i = 0; i < shape.size(); ++i) {
-        for (int j = 0; j < shape[i].size(); ++j) {
-            if (shape[i][j] != ' ') {
-                grid[row + i][col + j] = shape[i][j];
-            }
-        }
-    }*/
 
     return isValid;
 }
-/*void Board::moveBlockPos() {
 
-}*/
 
 
 void Board::placeBlockOnGrid(const Block& block) {
@@ -150,7 +114,7 @@ void Board::placeBlockOnGrid(const Block& block) {
     int row = block.getRow();
     int col = block.getCol();
 
-    std::cout << "Placing block at row: " << row << ", col: " << col << std::endl;
+    //std::cout << "Placing block at row: " << row << ", col: " << col << std::endl;
 
     for (int i = 0; i < shape.size(); ++i) {
         for (int j = 0; j < shape[i].size(); ++j) {
@@ -158,11 +122,11 @@ void Board::placeBlockOnGrid(const Block& block) {
             int newRow = row + i;
             int newCol = col + j;
             if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols && grid[newRow][newCol] == ' ') {
-                std::cout << "Placing " << shape[i][j] << " at (" << newRow << ", " << newCol << ")\n";
+                //std::cout << "Placing " << shape[i][j] << " at (" << newRow << ", " << newCol << ")\n";
                 grid[newRow][newCol] = shape[i][j]; // Place the actual character
-                std::cout << newRow << ", " << newCol << std::endl;
+                //std::cout << newRow << ", " << newCol << std::endl;
             } else {
-                std::cout << "Out of bounds: (" << newRow << ", " << newCol << ")\n";
+                //std::cout << "Out of bounds: (" << newRow << ", " << newCol << ")\n";
             }
         }
     }
@@ -272,18 +236,18 @@ void Board::dropBlock() {
 }
 
 void Board::clearFullRows() {
-    cout << "clear" << endl;
+    //cout << "clear" << endl;
     for (int i = 0; i < rows; ++i) {
         bool fullRow = true;
         for (int j = 0; j < cols; ++j) {
             if (grid[i][j] == ' ') {
                 fullRow = false;
-                cout << "breaking from clearing" << endl;
+                //cout << "breaking from clearing" << endl;
                 break;
             }
         }
         if (fullRow) {
-            cout << "actualy clearing row" << endl;
+            //cout << "actualy clearing row" << endl;
             grid.erase(grid.begin() + i);
             grid.insert(grid.begin(), std::vector<char>(cols, ' '));
             increaseScore(100); // How much to increase score by?
@@ -294,34 +258,6 @@ void Board::clearFullRows() {
 void Board::generateNextBlock() {
     nextBlock = level->createBlock();
 }
-
-/*void Board::display() const {
-    std::cout << "Level:     " << playerLevel << std::endl;
-    std::cout << "Score:     " << playerLevel << std::endl;
-    std::cout << "-----------" << std::endl;
-    for (const auto& row : grid) {
-        for (char cell : row) {
-            std::cout << cell;
-        }
-        std::cout << std::endl;
-    }
-    std::cout << "-----------" << std::endl;
-    std::cout << "Next: " << std::endl;
-    if (nextBlock == nullptr) {
-        std::cout<<std::endl;
-        return;
-    }
-    const auto& shape = nextBlock->getShape();
-    int row = shape.size();
-    int col = shape[0].size();
-    for (int i = 0; i < row; i++) {
-        for (int j = 0; j < col; j++) {
-            cout << shape[i][j];
-        }
-        cout << endl;
-    }
-    cout << endl;
-}*/
 
 bool Board::isGameOver() const {
     return !currentBlock;
