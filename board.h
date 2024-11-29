@@ -7,6 +7,8 @@
 #include <memory>
 #include <string>
 #include <iostream>
+#include <unordered_map>
+#include <unordered_set>
 #include "concreteTextObserver.h"
 
 class ConcreteTextObserver;
@@ -14,7 +16,7 @@ class Level;
 
 class Board {
 public:
-    Board(int rows, int cols, const std::string& name, int level, std::string f1);
+    Board(int rows, int cols, const std::string& name, int level, std::string f1, int seed);
     void switchCurrentBlock();
     void setCurBlock(char bl);
     void setNextBlock();
@@ -46,6 +48,7 @@ public:
     std::vector<std::vector<char>> getGrid();
     std::unique_ptr<Block> currentBlock;
     std::unique_ptr<Block> nextBlock;
+    void updateHighScore();
     
 private:
     int rows;
@@ -56,6 +59,12 @@ private:
     int score;
     int playerLevel;
     std::string f1;
+    std::unordered_map<int, int> indexMap;
+    std::vector<std::vector<int>> indexGrid;
+    int highScore;
+    int uniqueIndexCounter;
+    std::vector<int> indexList;
+    int seed;
 };
 
 #endif

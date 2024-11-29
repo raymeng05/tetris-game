@@ -5,18 +5,18 @@
 #include "level3.h"
 #include "level4.h"
 
-Board::Board(int rows, int cols, const std::string& name, int level, std::string f1)
-    : rows(rows), cols(cols), grid(rows, std::vector<char>(cols, ' ')), name(name), score(0), playerLevel(level), f1{f1} {
+Board::Board(int rows, int cols, const std::string& name, int level, std::string f1, int seed)
+    : rows(rows), cols(cols), grid(rows, std::vector<char>(cols, ' ')), indexMap(), indexGrid(rows, std::vector<int>(cols, -1)), name(name), score(0), highScore(0), playerLevel(level), uniqueIndexCounter(0), indexList(0), f1{f1}, seed{seed} {
         if (playerLevel == 0) {
             this->level = std::make_unique<Level0>(Level0{level, f1});
         } else if (playerLevel == 1) {
-            this->level = std::make_unique<Level1>(Level1{level});
+            this->level = std::make_unique<Level1>(Level1{level, seed});
         } else if (playerLevel == 2) {
-            this->level = std::make_unique<Level2>(Level2{level});
+            this->level = std::make_unique<Level2>(Level2{level, seed});
         } else if (playerLevel == 3) {
-            this->level = std::make_unique<Level3>(Level3{level});
+            this->level = std::make_unique<Level3>(Level3{level, seed});
         } else {
-            this->level = std::make_unique<Level4>(Level4{level});
+            this->level = std::make_unique<Level4>(Level4{level, seed});
         }
     }
 
@@ -29,6 +29,10 @@ void Board::placeCurBlockOnGrid() {
     for (int i = 0; i < shape.size(); ++i) {
         for (int j = 0; j < shape[i].size(); ++j) {
             grid[row + i][col + j] = shape[i][j];
+            if (shape[i][j] != ' ') {
+                indexGrid[row + i][col + j] = uniqueIndexCounter;
+                indexList.push_back(uniqueIndexCounter);  
+            }
         }
     }
 }
@@ -122,9 +126,11 @@ void Board::placeBlockOnGrid(const Block& block) {
             int newRow = row + i;
             int newCol = col + j;
             if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols && grid[newRow][newCol] == ' ') {
-                //std::cout << "Placing " << shape[i][j] << " at (" << newRow << ", " << newCol << ")\n";
                 grid[newRow][newCol] = shape[i][j]; // Place the actual character
-                //std::cout << newRow << ", " << newCol << std::endl;
+                if (shape[i][j] != ' ') {
+                    indexGrid[newRow][newCol] = uniqueIndexCounter;
+                    indexMap[uniqueIndexCounter] = playerLevel;
+                }
             } else {
                 //std::cout << "Out of bounds: (" << newRow << ", " << newCol << ")\n";
             }
@@ -164,10 +170,6 @@ bool Board::moveBlockDown() {
         currentBlock->moveUp();
         placeBlockOnGrid(*currentBlock); // Restore the block's position if the move is invalid
         //clearFullRows();
-        /*if (!isValidPosition(*currentBlock)) {
-            std::cout << "REACHED INVALID" << std::endl;
-            currentBlock.reset();
-        }*/
         return false;
     }
     placeBlockOnGrid(*currentBlock); // Place the block in its new position
@@ -215,8 +217,7 @@ void Board::clearBlockFromGrid(const Block& block) {
                 if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) {
                     //std::cout << "Clearing (" << newRow << ", " << newCol << ")\n";
                     grid[newRow][newCol] = ' '; // Clear the block's character
-                } else {
-                   // std::cout << "Out of bounds: (" << newRow << ", " << newCol << ")\n";
+                    indexGrid[newRow][newCol] = -1;
                 }
             }
         }
@@ -229,34 +230,97 @@ void Board::dropBlock() {
     }
     placeBlockOnGrid(*currentBlock);
     clearFullRows();
+    indexMap[uniqueIndexCounter] = playerLevel; // Store the level with the unique index
+    uniqueIndexCounter++;
     //currentBlock = std::move(nextBlock);
     //if (!isValidPosition(*currentBlock)) {
-      //  currentBlock.reset();
+        //currentBlock.reset();
     //}
 }
 
 void Board::clearFullRows() {
-    //cout << "clear" << endl;
+    std::vector<int> clearedRows;
     for (int i = 0; i < rows; ++i) {
         bool fullRow = true;
         for (int j = 0; j < cols; ++j) {
             if (grid[i][j] == ' ') {
                 fullRow = false;
-                //cout << "breaking from clearing" << endl;
                 break;
             }
         }
         if (fullRow) {
-            //cout << "actualy clearing row" << endl;
+            clearedRows.push_back(i);
             grid.erase(grid.begin() + i);
+            indexGrid.erase(indexGrid.begin() + i);
             grid.insert(grid.begin(), std::vector<char>(cols, ' '));
-            increaseScore(100); // How much to increase score by?
+            indexGrid.insert(indexGrid.begin(), std::vector<int>(cols, -1));
         }
+    }
+    if (!clearedRows.empty()) {
+        int points = (playerLevel + clearedRows.size()) * (playerLevel + clearedRows.size());
+        increaseScore(points);
+        updateHighScore();
+        //cout << "row cleared" << endl;
+    }
+
+    std::vector<int> newIndexList;
+    std::vector<int> clearedList;
+    std::unordered_set<int> seenIndexes; // Set to keep track of seen indexes
+
+    for (int index : indexList) {
+        bool blockCleared = true;
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < cols; ++j) {
+                if (indexGrid[i][j] == index) {
+                    blockCleared = false;
+                    break;
+                }
+            }
+            if (!blockCleared) break;
+        }
+        if (blockCleared && seenIndexes.find(index) == seenIndexes.end()) {
+            clearedList.push_back(index);
+            seenIndexes.insert(index); // Add the index to the set
+        }
+        if (!blockCleared) {
+            newIndexList.push_back(index);
+        }
+    }
+    indexList = newIndexList;
+
+    if (!clearedList.empty()) {
+        //std::cout << "block cleared";
+        int blockPoints = 0;
+        for (const auto& pair : indexMap) {
+            //std::cout << pair.first << " "; // pair.first is the key (index)
+        }
+
+        // Iterate through the indices in indexList
+        for (int index : clearedList) {
+            // Check if the index exists in indexMap
+            //std::cout << "index: " << index << std::endl;
+            auto it = indexMap.find(index);
+            if (it != indexMap.end()) {
+                //cout << "FOUND" << endl;
+                int level = it->second; // Access the level using indexMap
+                blockPoints += (level + 1) * (level + 1); // Calculate points based on the level
+                indexMap.erase(it); // Remove the index from indexMap
+            }
+        }
+
+        increaseScore(blockPoints); // Update the score with the calculated points
+        updateHighScore();
     }
 }
 
 void Board::generateNextBlock() {
     nextBlock = level->createBlock();
+}
+
+void Board::updateHighScore() {
+    if (score > highScore) {
+        highScore = score;
+    }
 }
 
 bool Board::isGameOver() const {
@@ -297,13 +361,13 @@ void Board::changeLevel() {
     if (playerLevel == 0) {
             this->level = std::make_unique<Level0>(Level0{playerLevel, f1});
         } else if (playerLevel == 1) {
-            this->level = std::make_unique<Level1>(Level1{playerLevel});
+            this->level = std::make_unique<Level1>(Level1{playerLevel, seed});
         } else if (playerLevel == 2) {
-            this->level = std::make_unique<Level2>(Level2{playerLevel});
+            this->level = std::make_unique<Level2>(Level2{playerLevel, seed});
         } else if (playerLevel == 3) {
-            this->level = std::make_unique<Level3>(Level3{playerLevel});
+            this->level = std::make_unique<Level3>(Level3{playerLevel, seed});
         } else {
-            this->level = std::make_unique<Level4>(Level4{playerLevel});
+            this->level = std::make_unique<Level4>(Level4{playerLevel, seed});
         }
 }
 

@@ -6,6 +6,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <sstream>
 using namespace std;
 
 int main(int argc, char *argv[]) {
@@ -20,26 +21,30 @@ int main(int argc, char *argv[]) {
         if (arg == "-text") {
             onlyText = true;
         } else if (arg == "-seed" && i + 1 < argc) {
-            seed = static_cast<unsigned int>(atoi(argv[++i]));
+            string temp = argv[++i];
+            istringstream sock {temp};
+            sock >> seed;
         } else if (arg == "-scriptfile1" && i + 1 < argc) {
             f1 = argv[++i];
         } else if (arg == "-scriptfile2" && i + 1 < argc) {
             f2 = argv[++i];
         } else if (arg == "-startlevel" && i + 1 < argc) {
-            level = atoi(argv[++i]);
+            string temp = argv[++i];
+            istringstream sock {temp};
+            sock >> level;
         }
     }
 
-    // Set the seed for the random number generator
-    srand(seed);
+    Game game("Player1", "Player2", level, f1, f2, onlyText, seed);
 
-    // Initialize and start the game with the parsed options
-    Game game("Player1", "Player2", level, f1, f2, onlyText);
-
+    unique_ptr<Xwindow> xw;
+    unique_ptr <ConcreteGraphicsObserver> cgo;
+    if (!onlyText) {
+        xw = make_unique<Xwindow>(550, 500);
+        cgo = make_unique<ConcreteGraphicsObserver>(&game, xw.get());
+    }
     CommandInterpreter interpreter(game);
-    Xwindow xw(550, 500);
     ConcreteTextObserver cto{&game};
-    ConcreteGraphicsObserver cgo{&game, &xw};
 
     game.start();
 

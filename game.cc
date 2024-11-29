@@ -2,8 +2,8 @@
 #include "concreteTextObserver.h"
 #include <iostream>
 
-Game::Game(const std::string& player1Name, const std::string& player2Name, int pLevel, string f1, string f2, bool onlyText)
-    : board1(std::make_unique<Board>(Board{18, 11, player1Name, pLevel, f1})), board2(std::make_unique<Board>(Board{18, 11, player2Name, pLevel, f2})), isPlayer1Turn(true), comm(" ") {}
+Game::Game(const std::string& player1Name, const std::string& player2Name, int pLevel, string f1, string f2, bool onlyText, int seed)
+    : board1(std::make_unique<Board>(Board{18, 11, player1Name, pLevel, f1, seed})), board2(std::make_unique<Board>(Board{18, 11, player2Name, pLevel, f2, seed})), isPlayer1Turn(true), comm(" ") {}
 
 void Game::start() {
     board1->setNextBlock();

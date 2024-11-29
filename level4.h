@@ -13,8 +13,9 @@ struct Level4 : public Level {
         int curLevel;
         std::default_random_engine rng;
         std::discrete_distribution<int> dist;
+        int seed;
     public:
-        Level4(int curLevel);
+        Level4(int curLevel, int seed);
         std::unique_ptr<Block> createBlock();
 };
 

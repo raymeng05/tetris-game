@@ -23,7 +23,7 @@ private:
     std::vector<Observer *> obs;
 
 public:
-    Game(const std::string& player1Name, const std::string& player2Name, int pLevel, string f1, string f2, bool onlyText);
+    Game(const std::string& player1Name, const std::string& player2Name, int pLevel, string f1, string f2, bool onlyText, int seed);
     void start();
     void switchTurn();
     void displayStatus() const;
