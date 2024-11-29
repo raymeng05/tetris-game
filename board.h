@@ -44,13 +44,13 @@ public:
     void changeLevel();
     void reset();
     std::vector<std::vector<char>> getGrid();
-
+    std::unique_ptr<Block> currentBlock;
+    std::unique_ptr<Block> nextBlock;
+    
 private:
     int rows;
     int cols;
     std::vector<std::vector<char>> grid;
-    std::unique_ptr<Block> currentBlock;
-    std::unique_ptr<Block> nextBlock;
     std::unique_ptr<Level> level;
     std::string name;
     int score;

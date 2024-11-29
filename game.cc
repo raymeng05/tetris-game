@@ -158,9 +158,9 @@ void Game::display() {
         std::cout << std::endl;
     }
     std::cout << "-----------" << "         " << "-----------" << std::endl;
-    std::cout << "Next: " << std::endl;
-    /*if (isPlayer1Turn) {
-        const auto& shape = board1->getNextBlock()->getShape();
+    if (isPlayer1Turn) {
+        std::cout << "Next: " << std::endl;
+        const auto& shape = board1->nextBlock->getShape();
         int row = shape.size();
         int col = shape[0].size();
         for (int i = 0; i < row; i++) {
@@ -171,18 +171,19 @@ void Game::display() {
         }
         cout << endl;
     } else {
-        const auto& shape = board2->getNextBlock()->getShape();
+        std::cout << "                    Next: " << std::endl; 
+        const auto& shape = board2->nextBlock->getShape();
         int row = shape.size();
         int col = shape[0].size();
         for (int i = 0; i < row; i++) {
-            std::cout << "      ";
+            std::cout << "                    ";
             for (int j = 0; j < col; j++) {
                 cout << shape[i][j];
             }
-            cout << endl;
+            std::cout << endl;
         }
     cout << endl;
-    }*/
+    }
 }
 
 void Game::notifyObservers() {
